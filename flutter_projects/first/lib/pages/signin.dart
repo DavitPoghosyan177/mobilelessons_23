@@ -1,27 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:first/button_widget.dart';
 import 'package:first/text_field_widget.dart';
-import 'package:first/db/preferences_service.dart';
+import 'package:first/state/user_state.dart';
 
 class Signin extends StatefulWidget {
-  const Signin(this.preferencesService, {super.key});
-  final PreferenceService preferencesService;
+   const Signin({super.key});
   @override
   State<Signin> createState() => _SigninState();
 }
 
 class _SigninState extends State<Signin> {
   final GlobalKey<FormState> _globalKey = GlobalKey<FormState>();
- final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
+  UserState? userState;
   @override
   Widget build(BuildContext context) {
+      userState = UserState.of(context);
       return Scaffold(
         appBar: AppBar(
           title:const Text('Sign In'),
-          centerTitle: true,
-
+          centerTitle: true
         ),
       
       body: Form(
@@ -120,15 +119,16 @@ class _SigninState extends State<Signin> {
     );
   }
  void _signIn() {
-    final String? username = widget.preferencesService.getUsername();
-    final String? password = widget.preferencesService.getPassword();
-     if (_usernameController.text.isEmpty || _passwordController.text.isEmpty) {
+    userState?.getUsername();
+    final String? password = userState?.getPassword();
+
+    if (_usernameController.text.isEmpty || _passwordController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Username or password cannot be empty')));
       return;
     }
 
-    if (username == _usernameController.text &&
+    if (userState?.username == _usernameController.text &&
         password == _passwordController.text) {
       Navigator.of(context).pushNamed('/profile');
     } else {

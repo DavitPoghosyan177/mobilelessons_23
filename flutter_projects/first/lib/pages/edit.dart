@@ -2,6 +2,7 @@ import 'package:first/db/preferences_service.dart';
 import 'package:first/edit_page_button.dart';
 import 'package:first/text_field_by_edit.dart';
 import 'package:flutter/material.dart';
+import 'package:first/state/user_state.dart';
 
 
 class Edit extends StatefulWidget {
@@ -17,7 +18,7 @@ class _EditState extends State<Edit> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
-
+  UserState? userState;
 @override
   void initState() {
     super.initState();
@@ -26,7 +27,7 @@ class _EditState extends State<Edit> {
 
   @override
   Widget build(BuildContext context) {
-
+    userState = UserState.of(context);
     return Scaffold(
         appBar: AppBar(
           title:const Text("edit profile",),
@@ -90,8 +91,7 @@ class _EditState extends State<Edit> {
                  ),
                 TextFieldWidgetByEdit(
                   controller: _usernameController,
-                  initialValue: widget.preferenceService?.getUsername(),
-                ),
+                  initialValue: UserState.of(context)?.username ?? ""),
                 const SizedBox(height: 8),
                 const Row( 
                    mainAxisAlignment: MainAxisAlignment.start,
@@ -104,7 +104,7 @@ class _EditState extends State<Edit> {
                  ),
                 TextFieldWidgetByEdit(
                   controller: _emailController,
-                  initialValue: widget.preferenceService?.getEmail(),
+                  initialValue: UserState.of(context)?.email ?? "" ,
                 ),
                 const SizedBox(height: 8),
                 const Row( 
@@ -118,7 +118,7 @@ class _EditState extends State<Edit> {
                   ),
                 TextFieldWidgetByEdit(
                   controller: _phoneNumberController,
-                    initialValue: widget.preferenceService?.getPhoneNumber(),
+                    initialValue: UserState.of(context)?.phone ?? "",
                 ),
                 const Row( 
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -147,16 +147,17 @@ class _EditState extends State<Edit> {
    void _updatePage() {
     final String? username = widget.preferenceService?.getUsername();
     final String? email = widget.preferenceService?.getEmail();
-    final String? phoneNumber = widget.preferenceService?.getPhoneNumber();
+    final String? phoneNumber = widget.preferenceService?.getPhone();
     final String? password = widget.preferenceService?.getPassword();
 
+   
     if (username != _usernameController.text ||
         email != _emailController.text ||
         phoneNumber != _phoneNumberController.text ||
         password != _passwordController.text) {
-      widget.preferenceService?.setUsername(_usernameController.text);
-      widget.preferenceService?.setEmail(_emailController.text);
-      widget.preferenceService?.setPhoneNumber(_phoneNumberController.text);
+      userState?.setUsername(_usernameController.text);
+      userState?.setEmail(_emailController.text);
+      userState?.setPhone(_phoneNumberController.text);
       widget.preferenceService?.setPassword(_passwordController.text);
     }
     Navigator.pop(context, '/profile');

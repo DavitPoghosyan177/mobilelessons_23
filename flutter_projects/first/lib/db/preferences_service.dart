@@ -20,11 +20,11 @@ class PreferenceService {
     return preferences.getString('password');
   }
 
-  Future<void> setPhoneNumber(String phoneNumber) async {
+  Future<void> setPhone(String phoneNumber) async {
     await preferences.setString('phone_number', phoneNumber);
   }
 
-  String? getPhoneNumber() {
+  String? getPhone() {
     return preferences.getString('phone_number');
   }
 

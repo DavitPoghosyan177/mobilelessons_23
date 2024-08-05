@@ -6,6 +6,7 @@ import 'package:first/button_aboutme.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:first/db/preferences_service.dart';
+import 'package:first/state/user_state.dart';
 
 
 class Profile extends StatefulWidget {
@@ -16,19 +17,12 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  //final GlobalKey<FormState> _globalKey = GlobalKey<FormState>();
-  String? username;
-  String? phoneNumber;
-  String? email;
   String? password;
 
   @override
   void initState() {
     super.initState();
-    username = widget.preferenceService?.getUsername();
-    email = widget.preferenceService?.getEmail();
     password = widget.preferenceService?.getPassword();
-    phoneNumber = widget.preferenceService?.getPhoneNumber();
   }
   @override
   Widget build(BuildContext context) {
@@ -61,7 +55,7 @@ class _ProfileState extends State<Profile> {
                     ),
                     const SizedBox(height: 10.0),
                     Text(
-                      "$username",
+                      UserState.of(context)?.username ?? '',            
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                           fontSize: 24,
@@ -169,7 +163,7 @@ class _ProfileState extends State<Profile> {
                                     color: Colors.grey[400],
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500)),
-                            Text("$phoneNumber",
+                            Text(UserState.of(context)?.phone ?? '',
                                 style:const TextStyle(
                                     color: Colors.white,
                                     fontSize: 16,
@@ -211,7 +205,7 @@ class _ProfileState extends State<Profile> {
                                     color: Colors.grey[400],
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500)),
-                            Text(email ?? '',
+                            Text(UserState.of(context)?.email ?? '',
                                 style:const TextStyle(
                                     color: Colors.white,
                                     fontSize: 16,

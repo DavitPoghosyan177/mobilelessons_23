@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:first/text_field_widget.dart';
 import 'package:first/db/preferences_service.dart';
 import 'package:first/button_signup.dart';
+import 'package:first/state/user_state.dart';
 
 
 class SignUp extends StatefulWidget {
@@ -19,13 +20,14 @@ class _SignUpState extends State<SignUp> {
   final GlobalKey<FormState> _globalKey = GlobalKey<FormState>();
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
+  UserState? userState;
   @override
   Widget build(BuildContext context) {
+    userState = UserState.of(context);
     return Scaffold(
         appBar: AppBar(
           title: const Text("Sign up"),
           centerTitle: true,
-          backgroundColor: Colors.white,
           
         ),
        body: Form(
@@ -118,7 +120,7 @@ class _SignUpState extends State<SignUp> {
                       const Text('Already have an account? '),
                       TextButton(
                           onPressed: () {
-                            Navigator.of(context).pushNamed('/sign-in');
+                            Navigator.of(context).pop();
                           },
                           child: const Text('Sign In',
                               style: TextStyle(
@@ -148,12 +150,10 @@ class _SignUpState extends State<SignUp> {
     }
 
     try {
-      await widget.preferencesService.setUsername(_usernameController.text);
+      await userState?.setUsername(_usernameController.text);
       await widget.preferencesService.setPassword(_passwordController.text);
-      await widget.preferencesService
-          .setPhoneNumber(_phoneNumberController.text);
-      await widget.preferencesService.setEmail(_emailController.text);
-
+      await userState?.setPhone(_passwordController.text);
+      await userState?.setEmail(_emailController.text);
       // ignore: use_build_context_synchronously
       Navigator.of(context).pushNamed('/profile');
     } catch (e) {
